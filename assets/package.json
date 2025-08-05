@@ -1,0 +1,26 @@
+{
+  "name": "@piying/valibot-visit",
+  "version": "1.1.6",
+  "author": "wszgrcy",
+  "keywords": [
+    "valibot",
+    "visit",
+    "traverse",
+    "schema"
+  ],
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/piying-org/piying-valibot-visit"
+  },
+  "homepage": "https://piying-org.github.io/website/docs/server/intro",
+  "description": "valibot遍历器",
+  "dependencies": {
+    "valibot": "^1.1.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.mjs"
+    }
+  }
+}

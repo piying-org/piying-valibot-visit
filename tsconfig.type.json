@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [],
+  "files": [
+    "./src/index.ts"
+  ],
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationDir": "./dist",
+    "declarationMap": false,
+    "stripInternal": true
+  }
+}
