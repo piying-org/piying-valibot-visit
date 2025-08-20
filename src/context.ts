@@ -1,5 +1,4 @@
 import { BaseSchemaHandle } from './handle/schema-handle';
-import { KeyPath } from './util/type';
 // 全局不变参数,
 export interface ConvertOptions<Handle extends typeof BaseSchemaHandle = typeof BaseSchemaHandle> {
   /** 环境 */

@@ -61,10 +61,10 @@ export function getDefaults<const TSchema extends DefaultSchema>(schema: TSchema
 
   // If it is a tuple schema, return defaults of items
   if ('items' in wrappedSchema) {
-    let list = [];
+    const list = [];
     for (let index = 0; index < wrappedSchema.items.length; index++) {
       const item = wrappedSchema.items[index];
-      let result = getDefaults(item);
+      const result = getDefaults(item);
       if (result !== undefined) {
         list[index] = result;
       }
@@ -74,7 +74,7 @@ export function getDefaults<const TSchema extends DefaultSchema>(schema: TSchema
   if ('options' in wrappedSchema) {
     if (wrappedSchema.type === 'intersect') {
       // 假设一定是对象
-      let obj = wrappedSchema.options.slice().reduce(
+      const obj = wrappedSchema.options.slice().reduce(
         (pre, item) => ({
           ...pre,
           ...getDefaults(item)!,

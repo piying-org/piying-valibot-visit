@@ -18,14 +18,8 @@ import {
   StrictObjectSchema,
   StrictObjectIssue,
   StrictObjectSchemaAsync,
-  ObjectKeys,
-  pick,
-  object,
-  string,
   InferInput,
-  is,
   _getStandardProps,
-  intersect,
   IntersectSchema,
 } from 'valibot';
 
@@ -60,7 +54,7 @@ export function changeObject<const TSchema extends Schema | IntersectS>(
   }
 ): TSchema {
   if (isObject<Schema>(schema)) {
-    let entries = { ...schema.entries };
+    const entries = { ...schema.entries };
     for (const key in changeObj) {
       if (changeObj[key] && (schema.entries as any)[key]) {
         const element = changeObj[key]((schema.entries as any)[key]);
@@ -75,7 +69,7 @@ export function changeObject<const TSchema extends Schema | IntersectS>(
       },
     };
   } else if (isIntersect<IntersectS>(schema as any)) {
-    let options = [...schema.options];
+    const options = [...schema.options];
     for (let i = 0; i < options.length; i++) {
       const option = options[i];
       options[i] = changeObject(option, changeObj);

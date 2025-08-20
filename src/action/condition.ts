@@ -1,5 +1,4 @@
 import type { BaseMetadata } from 'valibot';
-import { GroupControlAction } from './group-control';
 
 export interface ConditionAction<TInput = unknown> extends BaseMetadata<TInput> {
   /**

@@ -11,7 +11,7 @@ export function convertCore<Handle extends typeof BaseSchemaHandle<any>, T>(
     ...options,
     environments: options?.environments ?? ['default'],
   };
-  let context: ConvertContext = {
+  const context: ConvertContext = {
     lazyMap: new WeakMap(),
   };
   const sh = new resolvedOptions.handle(resolvedOptions, undefined, undefined, context);

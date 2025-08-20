@@ -2,8 +2,6 @@ import { ConvertOptions } from '../context';
 import * as v from 'valibot';
 import { ConvertContext, IntersectSchema, MetadataAction, Schema, SchemaOrPipe, UnionSchema } from '../type';
 import { convertSchema } from '../convert';
-import { KeyPath } from '../util/type';
-import { arrayPath } from '../util/array-path';
 import { getDefaults } from '../util/get-defaults';
 export type LazySchema = v.LazySchema<v.BaseSchema<unknown, unknown, any>>;
 export type ArraySchema = v.ArraySchema<v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>, v.ErrorMessage<v.ArrayIssue> | undefined>;
@@ -251,6 +249,7 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
         metadata.value.actions.forEach((item) => {
           this.metadataHandle(item as any, metadata.value.environments, workOn);
         });
+        break;
       }
       default:
         this.metadataDefaulthandle(metadata, environments, workOn);
@@ -269,7 +268,7 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
     if (sh) {
       this.lazyWrapped = sh as T;
     } else {
-      let loaded = schema.getter(undefined);
+      const loaded = schema.getter(undefined);
       sh = new this.globalConfig.handle(this.globalConfig, this as unknown as T, loaded);
       this.context.lazyMap.set(schema, sh);
       this.lazyWrapped = sh as T;
@@ -287,7 +286,7 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
   }
 
   objectItemSchema(childSchema: ObjectItemSchema, index: number | string): void {
-    let sh = new this.globalConfig.handle(this.globalConfig, this as unknown as T, childSchema);
+    const sh = new this.globalConfig.handle(this.globalConfig, this as unknown as T, childSchema);
     sh.key = index;
     sh.setParent(this as unknown as T);
     convertSchema(childSchema as SchemaOrPipe, sh);
