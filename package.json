@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "test": "rimraf -g ./test-dist && tsx ./script/test.esbuild.ts && mocha \"./test-dist/**/*.spec.mjs\" --enable-source-maps --inspect",
+    "coverage": "c8 npm run test",
     "build": "rimraf ./dist && tsx ./script/build.esbuild.ts && tsc -p tsconfig.type.json",
     "lint": "eslint --fix ./src && prettier ./src --write"
   },
@@ -11,6 +12,7 @@
   "author": "wszgrcy",
   "description": "",
   "dependencies": {
+    "c8": "^10.1.3",
     "valibot": "^1.1.0"
   },
   "devDependencies": {

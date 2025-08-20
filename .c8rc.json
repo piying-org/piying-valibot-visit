@@ -1,0 +1,12 @@
+{
+    "reporter": [
+        "html",
+        "text",
+        "lcovonly"
+    ],
+    "exclude": [
+        "**/*.spec.ts",
+        "script/**/*"
+    ],
+    "exclude-after-remap": true
+}
