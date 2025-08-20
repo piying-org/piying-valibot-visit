@@ -1,11 +1,25 @@
 import { ConvertOptions } from '../context';
 import * as v from 'valibot';
-import { ConvertContext, IntersectSchema, MetadataAction, Schema, SchemaOrPipe, UnionSchema } from '../type';
+import {
+  ConvertContext,
+  IntersectSchema,
+  MetadataAction,
+  Schema,
+  SchemaOrPipe,
+  UnionSchema,
+} from '../type';
 import { convertSchema } from '../convert';
 import { getDefaults } from '../util/get-defaults';
 export type LazySchema = v.LazySchema<v.BaseSchema<unknown, unknown, any>>;
-export type ArraySchema = v.ArraySchema<v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>, v.ErrorMessage<v.ArrayIssue> | undefined>;
-export type ObjectItemSchema = v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>;
+export type ArraySchema = v.ArraySchema<
+  v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
+  v.ErrorMessage<v.ArrayIssue> | undefined
+>;
+export type ObjectItemSchema = v.BaseSchema<
+  unknown,
+  unknown,
+  v.BaseIssue<unknown>
+>;
 export type ObjectSchema =
   | v.ObjectSchema<v.ObjectEntries, v.ErrorMessage<v.ObjectIssue> | undefined>
   | v.ObjectWithRestSchema<
@@ -13,8 +27,14 @@ export type ObjectSchema =
       v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
       v.ErrorMessage<v.ObjectWithRestIssue> | undefined
     >
-  | v.StrictObjectSchema<v.ObjectEntries, v.ErrorMessage<v.StrictObjectIssue> | undefined>
-  | v.LooseObjectSchema<v.ObjectEntries, v.ErrorMessage<v.LooseObjectIssue> | undefined>;
+  | v.StrictObjectSchema<
+      v.ObjectEntries,
+      v.ErrorMessage<v.StrictObjectIssue> | undefined
+    >
+  | v.LooseObjectSchema<
+      v.ObjectEntries,
+      v.ErrorMessage<v.LooseObjectIssue> | undefined
+    >;
 export type TupleSchema =
   | v.TupleSchema<v.TupleItems, v.ErrorMessage<v.TupleIssue> | undefined>
   | v.TupleWithRestSchema<
@@ -22,8 +42,14 @@ export type TupleSchema =
       v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
       v.ErrorMessage<v.TupleWithRestIssue> | undefined
     >
-  | v.LooseTupleSchema<v.TupleItems, v.ErrorMessage<v.LooseTupleIssue> | undefined>
-  | v.StrictTupleSchema<v.TupleItems, v.ErrorMessage<v.StrictTupleIssue> | undefined>;
+  | v.LooseTupleSchema<
+      v.TupleItems,
+      v.ErrorMessage<v.LooseTupleIssue> | undefined
+    >
+  | v.StrictTupleSchema<
+      v.TupleItems,
+      v.ErrorMessage<v.StrictTupleIssue> | undefined
+    >;
 export type OptionalWrapSchema =
   | v.NullableSchema<
       v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
@@ -31,7 +57,10 @@ export type OptionalWrapSchema =
     >
   | v.NullishSchema<
       v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
-      v.Default<v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>, null | undefined>
+      v.Default<
+        v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
+        null | undefined
+      >
     >
   | v.ExactOptionalSchema<
       v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
@@ -46,16 +75,36 @@ export type OptionalWrapSchema =
       v.Default<v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>, undefined>
     >;
 export type NonOptionalWrapSchema =
-  | v.NonNullableSchema<v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>, v.ErrorMessage<v.NonNullableIssue> | undefined>
-  | v.NonNullishSchema<v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>, v.ErrorMessage<v.NonNullishIssue> | undefined>
-  | v.NonOptionalSchema<v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>, v.ErrorMessage<v.NonOptionalIssue> | undefined>;
-export type DefaultSchema = v.LiteralSchema<v.Literal, v.ErrorMessage<v.LiteralIssue> | undefined>;
+  | v.NonNullableSchema<
+      v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
+      v.ErrorMessage<v.NonNullableIssue> | undefined
+    >
+  | v.NonNullishSchema<
+      v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
+      v.ErrorMessage<v.NonNullishIssue> | undefined
+    >
+  | v.NonOptionalSchema<
+      v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
+      v.ErrorMessage<v.NonOptionalIssue> | undefined
+    >;
+export type DefaultSchema = v.LiteralSchema<
+  v.Literal,
+  v.ErrorMessage<v.LiteralIssue> | undefined
+>;
 export type EnumSchema =
-  | v.PicklistSchema<v.PicklistOptions, v.ErrorMessage<v.PicklistIssue> | undefined>
+  | v.PicklistSchema<
+      v.PicklistOptions,
+      v.ErrorMessage<v.PicklistIssue> | undefined
+    >
   | v.EnumSchema<v.Enum, v.ErrorMessage<v.EnumIssue> | undefined>;
 
-export type VoidSchema = v.VoidSchema<v.ErrorMessage<v.VoidIssue> | undefined> | v.NeverSchema<v.ErrorMessage<v.NeverIssue> | undefined>;
-export type CustomSchema = v.CustomSchema<v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>, v.ErrorMessage<v.CustomIssue> | undefined>;
+export type VoidSchema =
+  | v.VoidSchema<v.ErrorMessage<v.VoidIssue> | undefined>
+  | v.NeverSchema<v.ErrorMessage<v.NeverIssue> | undefined>;
+export type CustomSchema = v.CustomSchema<
+  v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
+  v.ErrorMessage<v.CustomIssue> | undefined
+>;
 export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
   key?: string | number;
 
@@ -84,12 +133,17 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
   context!: ConvertContext;
   afterSchemaTypeList: any[] = [];
   constructor(
-    globalConfig: Omit<ConvertOptions<new (...args: ConstructorParameters<typeof BaseSchemaHandle<any>>) => T>, 'name'> & {
+    globalConfig: Omit<
+      ConvertOptions<
+        new (...args: ConstructorParameters<typeof BaseSchemaHandle<any>>) => T
+      >,
+      'name'
+    > & {
       environments: string[];
     },
     callSchemaHandle?: T,
     callDefineSchema?: v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
-    context?: ConvertContext
+    context?: ConvertContext,
   ) {
     this.globalConfig = globalConfig;
     this.callSchemaHandle = callSchemaHandle;
@@ -195,7 +249,10 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
       delete this.defaultValue;
     }
   }
-  recordSchema(key: v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>, value: v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>) {}
+  recordSchema(
+    key: v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
+    value: v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
+  ) {}
   defaultSchema(schema: DefaultSchema) {}
   enumSchema(schema: EnumSchema) {}
   voidSchema(schema: VoidSchema) {}
@@ -206,9 +263,22 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
       this.metadata(item, item.workOn);
     });
   }
-  metadataDefaulthandle(metadata: MetadataAction, environments: string[], workOn: string) {}
-  metadataHandle(metadata: MetadataAction, environments: string[], workOn: string) {
-    if (this.globalConfig.environments !== environments && this.globalConfig.environments.every((item) => !environments.includes(item))) {
+  metadataDefaulthandle(
+    metadata: MetadataAction,
+    environments: string[],
+    workOn: string,
+  ) {}
+  metadataHandle(
+    metadata: MetadataAction,
+    environments: string[],
+    workOn: string,
+  ) {
+    if (
+      this.globalConfig.environments !== environments &&
+      this.globalConfig.environments.every(
+        (item) => !environments.includes(item),
+      )
+    ) {
       return;
     }
     if (workOn === 'init' && 'workOn' in metadata && metadata.workOn) {
@@ -269,7 +339,11 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
       this.lazyWrapped = sh as T;
     } else {
       const loaded = schema.getter(undefined);
-      sh = new this.globalConfig.handle(this.globalConfig, this as unknown as T, loaded);
+      sh = new this.globalConfig.handle(
+        this.globalConfig,
+        this as unknown as T,
+        loaded,
+      );
       this.context.lazyMap.set(schema, sh);
       this.lazyWrapped = sh as T;
       convertSchema(loaded as any, sh);
@@ -279,14 +353,25 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
     if (this.isObjectControl) {
       return;
     }
-    const sh = new this.globalConfig.handle(this.globalConfig, this as unknown as T, schema);
+    const sh = new this.globalConfig.handle(
+      this.globalConfig,
+      this as unknown as T,
+      schema,
+    );
     sh.parent = this as any as T;
     this.arrayChild = sh as T;
     convertSchema(schema.item as SchemaOrPipe, sh);
   }
 
-  objectItemSchema(childSchema: ObjectItemSchema, index: number | string): void {
-    const sh = new this.globalConfig.handle(this.globalConfig, this as unknown as T, childSchema);
+  objectItemSchema(
+    childSchema: ObjectItemSchema,
+    index: number | string,
+  ): void {
+    const sh = new this.globalConfig.handle(
+      this.globalConfig,
+      this as unknown as T,
+      childSchema,
+    );
     sh.key = index;
     sh.setParent(this as unknown as T);
     convertSchema(childSchema as SchemaOrPipe, sh);
@@ -295,13 +380,15 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
   anySchema(schema: v.AnySchema | v.UnknownSchema) {}
 
   undefinedSchema(
-    schema: v.NullSchema<v.ErrorMessage<v.NullIssue> | undefined> | v.UndefinedSchema<v.ErrorMessage<v.UndefinedIssue> | undefined>
+    schema:
+      | v.NullSchema<v.ErrorMessage<v.NullIssue> | undefined>
+      | v.UndefinedSchema<v.ErrorMessage<v.UndefinedIssue> | undefined>,
   ) {}
   basicSchema(
     schema:
       | v.StringSchema<v.ErrorMessage<v.StringIssue> | undefined>
       | v.BooleanSchema<v.ErrorMessage<v.BooleanIssue> | undefined>
-      | v.NumberSchema<v.ErrorMessage<v.NumberIssue> | undefined>
+      | v.NumberSchema<v.ErrorMessage<v.NumberIssue> | undefined>,
   ) {}
   intersectSchema(schema: IntersectSchema): void {
     if (this.isObjectControl) {
@@ -319,8 +406,16 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
       this.type = 'intersect-group';
     }
   }
-  logicItemSchema(schema: v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>, index: number, type: 'intersect' | 'union') {
-    const sh = new this.globalConfig.handle(this.globalConfig, this as unknown as T, schema);
+  logicItemSchema(
+    schema: v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
+    index: number,
+    type: 'intersect' | 'union',
+  ) {
+    const sh = new this.globalConfig.handle(
+      this.globalConfig,
+      this as unknown as T,
+      schema,
+    );
     sh.setParent(this as unknown as T);
     convertSchema(schema as SchemaOrPipe, sh);
   }

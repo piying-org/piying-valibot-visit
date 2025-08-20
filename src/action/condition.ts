@@ -1,6 +1,7 @@
 import type { BaseMetadata } from 'valibot';
 
-export interface ConditionAction<TInput = unknown> extends BaseMetadata<TInput> {
+export interface ConditionAction<TInput = unknown>
+  extends BaseMetadata<TInput> {
   /**
    * The action type.
    */
@@ -12,11 +13,13 @@ export interface ConditionAction<TInput = unknown> extends BaseMetadata<TInput> 
 
   readonly value: {
     environments: string[];
-    actions: (BaseMetadata<TInput>)[];
+    actions: BaseMetadata<TInput>[];
   };
 }
 
-export function condition<TInput>(value: ConditionAction<TInput>['value']): ConditionAction<TInput> {
+export function condition<TInput>(
+  value: ConditionAction<TInput>['value'],
+): ConditionAction<TInput> {
   return {
     kind: 'metadata',
     type: 'condition',

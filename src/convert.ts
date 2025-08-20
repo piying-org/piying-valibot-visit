@@ -5,7 +5,7 @@ import { flatSchema } from './util/flat-schema';
 export function convertCore<Handle extends typeof BaseSchemaHandle<any>, T>(
   obj: SchemaOrPipe,
   fn: (item: InstanceType<Handle>) => T,
-  options: ConvertOptions<Handle>
+  options: ConvertOptions<Handle>,
 ) {
   const resolvedOptions = {
     ...options,
@@ -14,14 +14,22 @@ export function convertCore<Handle extends typeof BaseSchemaHandle<any>, T>(
   const context: ConvertContext = {
     lazyMap: new WeakMap(),
   };
-  const sh = new resolvedOptions.handle(resolvedOptions, undefined, undefined, context);
+  const sh = new resolvedOptions.handle(
+    resolvedOptions,
+    undefined,
+    undefined,
+    context,
+  );
   convertSchema(obj, sh);
   return fn(sh as InstanceType<Handle>);
 }
 
 // 目前,希望先处理管道,然后再处理当前,子级
 //
-export function convertSchema(schemaOrPipe: SchemaOrPipe, sh: BaseSchemaHandle<BaseSchemaHandle<any>>) {
+export function convertSchema(
+  schemaOrPipe: SchemaOrPipe,
+  sh: BaseSchemaHandle<BaseSchemaHandle<any>>,
+) {
   sh.begin(schemaOrPipe);
 
   const list = flatSchema(schemaOrPipe);

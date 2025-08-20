@@ -30,11 +30,22 @@ type DefaultSchema =
   | LooseObjectSchema<ObjectEntries, ErrorMessage<LooseObjectIssue> | undefined>
   | LooseTupleSchema<TupleItems, ErrorMessage<LooseTupleIssue> | undefined>
   | ObjectSchema<ObjectEntries, ErrorMessage<ObjectIssue> | undefined>
-  | ObjectWithRestSchema<ObjectEntries, BaseSchema<unknown, unknown, BaseIssue<unknown>>, ErrorMessage<ObjectWithRestIssue> | undefined>
-  | StrictObjectSchema<ObjectEntries, ErrorMessage<StrictObjectIssue> | undefined>
+  | ObjectWithRestSchema<
+      ObjectEntries,
+      BaseSchema<unknown, unknown, BaseIssue<unknown>>,
+      ErrorMessage<ObjectWithRestIssue> | undefined
+    >
+  | StrictObjectSchema<
+      ObjectEntries,
+      ErrorMessage<StrictObjectIssue> | undefined
+    >
   | StrictTupleSchema<TupleItems, ErrorMessage<StrictTupleIssue> | undefined>
   | TupleSchema<TupleItems, ErrorMessage<TupleIssue> | undefined>
-  | TupleWithRestSchema<TupleItems, BaseSchema<unknown, unknown, BaseIssue<unknown>>, ErrorMessage<TupleWithRestIssue> | undefined>
+  | TupleWithRestSchema<
+      TupleItems,
+      BaseSchema<unknown, unknown, BaseIssue<unknown>>,
+      ErrorMessage<TupleWithRestIssue> | undefined
+    >
   | IntersectSchema
   | UnionSchema;
 function coreSchema<TSchema extends DefaultSchema>(schema: TSchema) {
@@ -44,19 +55,24 @@ function coreSchema<TSchema extends DefaultSchema>(schema: TSchema) {
   return schema as TSchema;
 }
 // @__NO_SIDE_EFFECTS__
-export function getDefaults<const TSchema extends DefaultSchema>(schema: TSchema): InferOutput<TSchema> {
+export function getDefaults<const TSchema extends DefaultSchema>(
+  schema: TSchema,
+): InferOutput<TSchema> {
   const wrappedSchema = coreSchema(schema);
   // If it is an object schema, return defaults of entries
   if ('entries' in wrappedSchema) {
     const object: Record<string, unknown> = {};
     const defaultValue = getDefault(schema);
     for (const key in wrappedSchema.entries) {
-      const result = (defaultValue as any)?.[key] ?? getDefaults(wrappedSchema.entries[key]);
+      const result =
+        (defaultValue as any)?.[key] ?? getDefaults(wrappedSchema.entries[key]);
       if (result !== undefined) {
         object[key] = result;
       }
     }
-    return Object.keys(object).length ? object : (undefined as InferDefaults<TSchema>);
+    return Object.keys(object).length
+      ? object
+      : (undefined as InferDefaults<TSchema>);
   }
 
   // If it is a tuple schema, return defaults of items
@@ -79,7 +95,7 @@ export function getDefaults<const TSchema extends DefaultSchema>(schema: TSchema
           ...pre,
           ...getDefaults(item)!,
         }),
-        {} as Record<string, unknown>
+        {} as Record<string, unknown>,
       ) as InferDefaults<TSchema>;
       return Object.keys(obj as any).length ? obj : undefined;
     }

@@ -1,6 +1,8 @@
 import { BaseSchemaHandle } from './handle/schema-handle';
 // 全局不变参数,
-export interface ConvertOptions<Handle extends typeof BaseSchemaHandle = typeof BaseSchemaHandle> {
+export interface ConvertOptions<
+  Handle extends typeof BaseSchemaHandle = typeof BaseSchemaHandle,
+> {
   /** 环境 */
   environments?: string[];
   /** 上下文 */
