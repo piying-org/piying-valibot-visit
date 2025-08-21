@@ -86,6 +86,18 @@ export function changeObject<const TSchema extends Schema | IntersectS>(
         entries[key] = element;
       }
     }
+    if ('pipe' in schema) {
+      return pipe(
+        {
+          ...(schema as any).pipe[0],
+          entries,
+          get '~standard'() {
+            return _getStandardProps(this);
+          },
+        },
+        ...(schema.pipe as any).slice(1),
+      );
+    }
     return {
       ...schema,
       entries,
@@ -98,6 +110,18 @@ export function changeObject<const TSchema extends Schema | IntersectS>(
     for (let i = 0; i < options.length; i++) {
       const option = options[i];
       options[i] = changeObject(option, changeObj);
+    }
+    if ('pipe' in schema) {
+      return pipe(
+        {
+          ...(schema as any).pipe[0],
+          options,
+          get '~standard'() {
+            return _getStandardProps(this);
+          },
+        },
+        ...(schema.pipe as any).slice(1),
+      );
     }
     return {
       ...schema,
