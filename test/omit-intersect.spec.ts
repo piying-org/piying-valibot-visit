@@ -98,4 +98,26 @@ describe('omit-intersect', () => {
       expect(parseResult.output.k2).eq('2');
     }
   });
+  it('GenericSchema', () => {
+    type Lazy = v.GenericSchema<
+      { k1: v.InferInput<typeof Obj1> },
+      { k1: v.InferOutput<typeof Obj1> }
+    >;
+    const Obj1 = v.string();
+    let dd: Lazy = v.object({ k1: Obj1 });
+    let define = v.intersect([
+      dd,
+      v.object({
+        k2: v.string(),
+      }),
+    ]);
+    let result = omitIntersect(define, ['k1']);
+    type Result = v.InferOutput<typeof result>;
+    const resolvedValue: Result = { k2: '1' };
+    expect(resolvedValue).deep.eq({ k2: '1' });
+    let result2 = omitIntersect(define, ['k2']);
+    type Result2 = v.InferOutput<typeof result2>;
+    const resolvedValue2: Result2 = { k1: '1' };
+    expect(resolvedValue2).deep.eq({ k1: '1' });
+  });
 });

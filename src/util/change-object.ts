@@ -27,6 +27,7 @@ import {
   SchemaWithPipe,
   PipeItem,
   pipe,
+  GenericSchema,
 } from 'valibot';
 
 type Schema = SchemaWithoutPipe<
@@ -147,6 +148,10 @@ type ObjectPartRemove<
         >
       : TSchema
     : TSchema;
+type GenericSchemaRemove<Input, Output, Tkeys extends string[]> = GenericSchema<
+  Omit<Input, Tkeys[number]>,
+  Omit<Output, Tkeys[number]>
+>;
 type ObjectListRemove<
   TSchemaList extends readonly any[],
   Tkeys extends string[],
@@ -157,7 +162,12 @@ type ObjectListRemove<
       ? [ObjectPartRemove<First, Tkeys>, ...ObjectListRemove<Rest, Tkeys>]
       : First extends IntersectSchema<any, any>
         ? [IntersectRemove<First, Tkeys>, ...ObjectListRemove<Rest, Tkeys>]
-        : ObjectListRemove<Rest, Tkeys>
+        : First extends GenericSchema<infer Input, infer Output>
+          ? [
+              GenericSchemaRemove<Input, Output, Tkeys>,
+              ...ObjectListRemove<Rest, Tkeys>,
+            ]
+          : ObjectListRemove<Rest, Tkeys>
     : TSchemaList;
 
 type IntersectRemove<Schema, Tkeys extends string[]> =
@@ -185,7 +195,11 @@ type ObjectListSchemaKeys<TSchemaList extends readonly any[]> =
           ? ObjectKeys<Schema>
           : Schema extends IntersectSchema<any, any>
             ? IntersectKeys<Schema>
-            : []),
+            : Schema extends GenericSchema<infer A, infer B>
+              ? A extends object
+                ? keyof A
+                : []
+              : []),
         ...ObjectListSchemaKeys<Rest>,
       ]
     : [];
