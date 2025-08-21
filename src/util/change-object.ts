@@ -24,6 +24,9 @@ import {
   ObjectKeys,
   SchemaWithOmit,
   omit,
+  SchemaWithPipe,
+  PipeItem,
+  pipe,
 } from 'valibot';
 
 type Schema = SchemaWithoutPipe<
@@ -139,6 +142,18 @@ type IntersectRemove<Schema, Tkeys extends string[]> =
     : Schema extends ObjectSchema<any, any>
       ? ObjectPartRemove<Schema, Tkeys>
       : Schema;
+type IntersectRemove2<Schema, Tkeys extends string[]> =
+  Schema extends SchemaWithPipe<infer PipeList>
+    ? PipeList extends [infer PipeSchema, ...infer PipeActionList]
+      ? IntersectRemove<PipeSchema, Tkeys> extends IntersectSchema<any, any>
+        ? PipeActionList extends PipeItem<any, any, any>[]
+          ? SchemaWithPipe<
+              readonly [IntersectRemove<PipeSchema, Tkeys>, ...PipeActionList]
+            >
+          : SchemaWithPipe<readonly [IntersectRemove<PipeSchema, Tkeys>]>
+        : Schema
+      : Schema
+    : IntersectRemove<Schema, Tkeys>;
 type ObjectListSchemaKeys<TSchemaList extends readonly any[]> =
   TSchemaList extends [infer Schema, ...infer Rest]
     ? [
@@ -156,19 +171,41 @@ type AnyTuple<T extends readonly string[]> = {
 type IntersectKeys<Schema extends IntersectSchema<any, any>> = AnyTuple<
   ObjectListSchemaKeys<Schema['options']>
 >;
+export type IntersectSchema2 =
+  | IntersectSchema<any, any>
+  | SchemaWithPipe<[IntersectSchema<any, any>]>;
 
 export function omitIntersect<
-  const TSchema extends IntersectSchema<any, any>,
+  const TSchema extends IntersectSchema2,
   const TKeys extends IntersectKeys<TSchema>,
->(schema: TSchema, keys: TKeys): IntersectRemove<TSchema, TKeys> {
-  const options = [];
+>(schema: TSchema, keys: TKeys): IntersectRemove2<TSchema, TKeys> {
+  const options: any[] = [];
   for (let index = 0; index < schema.options.length; index++) {
     const item = schema.options[index];
     if (isObject(item)) {
-      options.push(omit(item, keys as any));
+      if ('pipe' in item) {
+        const pipeList = item.pipe as unknown as any[];
+        options.push(
+          pipe(omit(pipeList[0], keys as any) as any, ...pipeList.slice(1)),
+        );
+      } else {
+        options.push(omit(item, keys as any));
+      }
     } else if (isIntersect(item)) {
       options.push(omitIntersect(item, keys));
     }
+  }
+  if ('pipe' in schema) {
+    return pipe(
+      {
+        ...(schema as any).pipe[0],
+        options: options,
+        get '~standard'() {
+          return _getStandardProps(this);
+        },
+      },
+      ...schema.pipe.slice(1),
+    ) as any;
   }
   return {
     ...schema,
