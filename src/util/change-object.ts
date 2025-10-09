@@ -178,11 +178,11 @@ type IntersectRemove<Schema, Tkeys extends string[]> =
       : Schema;
 type IntersectRemove2<Schema, Tkeys extends string[]> =
   Schema extends SchemaWithPipe<infer PipeList>
-    ? PipeList extends [infer PipeSchema, ...infer PipeActionList]
+    ? PipeList extends readonly [infer PipeSchema, ...infer PipeRestList]
       ? IntersectRemove<PipeSchema, Tkeys> extends IntersectSchema<any, any>
-        ? PipeActionList extends PipeItem<any, any, any>[]
+        ? PipeRestList extends PipeItem<any, any, any>[]
           ? SchemaWithPipe<
-              readonly [IntersectRemove<PipeSchema, Tkeys>, ...PipeActionList]
+              readonly [IntersectRemove<PipeSchema, Tkeys>, ...PipeRestList]
             >
           : SchemaWithPipe<readonly [IntersectRemove<PipeSchema, Tkeys>]>
         : Schema

@@ -57,6 +57,7 @@ describe('omit-intersect', () => {
       }),
     );
     let result = omitIntersect(define, ['k1']);
+    type OmitType = v.InferOutput<typeof result>;
     expect(result.pipe[0].options).eq(result.options);
     expect(result.options.length).eq(2);
     expect(result.type).eq('intersect');
@@ -119,5 +120,20 @@ describe('omit-intersect', () => {
     type Result2 = v.InferOutput<typeof result2>;
     const resolvedValue2: Result2 = { k1: '1' };
     expect(resolvedValue2).deep.eq({ k1: '1' });
+  });
+  it('pipe+交叉', () => {
+    let define = v.pipe(
+      v.intersect([
+        v.object({
+          k2: v.string(),
+          k3: v.string(),
+        }),
+      ]),
+    );
+    let result = omitIntersect(define, ['k2']);
+    type OmitType = v.InferOutput<typeof result>;
+    let parseResult = v.safeParse(result, { k3: '2' });
+    expect(parseResult.success).true;
+    expect(parseResult.output).deep.eq({ k3: '2' });
   });
 });
