@@ -8,3 +8,5 @@ export * from './type';
 export * from './context';
 export * from './util/type';
 export * from './util/change-object';
+import * as schema from './schema';
+export { schema };
