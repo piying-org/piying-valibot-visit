@@ -54,15 +54,12 @@ export type InferIntersectInput<
 ]
   ? TRest extends InferOption<unknown, unknown>[]
     ? TInput extends NonNullable<TInput>
-      ?
-          | TInput
-          | InferIntersectInput<TRest>
-          | (TInput & InferIntersectInput<TRest>)
+      ? TInput & InferIntersectInput<TRest>
       :
           | InferIntersectInput<TRest>
           | (NonNullable<TInput> & InferIntersectInput<TRest>)
     : never
-  : never;
+  : {};
 
 /**
  * Infer intersect output type.
@@ -75,12 +72,9 @@ export type InferIntersectOutput<
 ]
   ? TRest extends InferOption<unknown, unknown>[]
     ? TOutput extends NonNullable<TOutput>
-      ?
-          | TOutput
-          | InferIntersectOutput<TRest>
-          | (TOutput & InferIntersectOutput<TRest>)
+      ? TOutput & InferIntersectOutput<TRest>
       :
           | InferIntersectOutput<TRest>
           | (NonNullable<TOutput> & InferIntersectOutput<TRest>)
     : never
-  : never;
+  : {};
