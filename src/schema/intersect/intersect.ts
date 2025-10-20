@@ -101,7 +101,9 @@ export function intersect(
         // Parse schema of each option and collect outputs
         for (const schema of this.options) {
           let optionDataset = schema['~run']({ value: input }, config);
-          if (!optionDataset.typed) {
+
+          // If there are issues, capture them
+          if (optionDataset.issues) {
             if (schema.type === 'optional') {
               let result = getDefault(schema);
               if (result === undefined) {
@@ -109,10 +111,6 @@ export function intersect(
               }
               optionDataset = { typed: true, value: result };
             }
-          }
-
-          // If there are issues, capture them
-          if (optionDataset.issues) {
             if (dataset.issues) {
               // @ts-expect-error
               dataset.issues.push(...optionDataset.issues);
