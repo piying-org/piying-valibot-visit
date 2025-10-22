@@ -103,7 +103,7 @@ export function intersect(
           let optionDataset = schema['~run']({ value: input }, config);
 
           // If there are issues, capture them
-          if (optionDataset.issues) {
+          if (optionDataset.issues || optionDataset.value === undefined) {
             if (schema.type === 'optional') {
               let result = getDefault(schema);
               if (result === undefined) {
