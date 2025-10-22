@@ -107,6 +107,7 @@ export function intersect(
             if (schema.type === 'optional') {
               let result = getDefault(schema);
               if (result === undefined) {
+                outputs ??= [];
                 continue;
               }
               optionDataset = { typed: true, value: result };

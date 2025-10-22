@@ -9,7 +9,8 @@ describe('schema-custom', () => {
       v.optional(v.object({ k3: v.number() })),
     ]);
     // todo 类型问题
-    type DefineType = v.InferOutput<typeof define>;
+    type InputDefineType = v.InferInput<typeof define>;
+    type OutputDefineType = v.InferOutput<typeof define>;
 
     let result = v.safeParse(define, { k1: 1 });
     expect(result.success).eq(true);
@@ -29,6 +30,13 @@ describe('schema-custom', () => {
     let result = v.safeParse(define, 31);
     expect(result.success).true;
     result = v.safeParse(define, 19);
+    expect(result.success).true;
+  });
+  it('intersect-empty', () => {
+    let define = schema.intersect([v.optional(v.object({ a: v.number() }))]);
+    type DefineType = v.InferOutput<typeof define>;
+
+    let result = v.safeParse(define, { xxx: 1 });
     expect(result.success).true;
   });
 });
