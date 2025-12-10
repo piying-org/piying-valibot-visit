@@ -6,7 +6,13 @@ import {
   OptionalWrapSchema,
 } from '../src/handle/schema-handle';
 import * as v from 'valibot';
-import { condition, defineName, rawConfig, SchemaOrPipe } from '../src';
+import {
+  condition,
+  defineName,
+  metadataList,
+  rawConfig,
+  SchemaOrPipe,
+} from '../src';
 describe('action', () => {
   class TestHandle extends BaseSchemaHandle<any> {}
 
@@ -57,5 +63,21 @@ describe('action', () => {
       },
     );
     expect(result.props?.['title']).eq(undefined);
+  });
+  it('metadata-list', () => {
+    let a = v.pipe(v.string(), metadataList([defineName('use1')]));
+    let result = convertCore(
+      a,
+      (item) => {
+        return item;
+      },
+      {
+        handle: TestHandle,
+        defaultMetadataActionsGroup: {
+          use1: [v.title('preset')],
+        },
+      },
+    );
+    expect(result.props!['title']).eq('preset');
   });
 });

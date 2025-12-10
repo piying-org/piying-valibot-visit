@@ -290,6 +290,12 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
         this.defineName = (metadata as any).value;
         break;
       }
+      case 'metadataList': {
+        metadata.value.forEach((item) => {
+          this.#getDefineName(item as any, environments);
+        });
+        break;
+      }
       case 'condition': {
         metadata.value.actions.forEach((item) => {
           this.#getDefineName(item as any, metadata.value.environments);
@@ -354,11 +360,7 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
       }
       case 'metadataList': {
         metadata.value.forEach((item) => {
-          this.metadataHandle(
-            item as any,
-            environments,
-            workOn,
-          );
+          this.metadataHandle(item as any, environments, workOn);
         });
         break;
       }
