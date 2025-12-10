@@ -352,6 +352,16 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
         });
         break;
       }
+      case 'metadataList': {
+        metadata.value.forEach((item) => {
+          this.metadataHandle(
+            item as any,
+            environments,
+            workOn,
+          );
+        });
+        break;
+      }
       default:
         this.metadataDefaulthandle(metadata, environments, workOn);
         break;
@@ -368,7 +378,8 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
     }
   }
   initMetadata() {
-    const list = this.globalConfig.defaultMetadataActionsGroup?.[this.defineName];
+    const list =
+      this.globalConfig.defaultMetadataActionsGroup?.[this.defineName];
     if (list) {
       list.forEach((item) => {
         this.metadata(item as any, 'init');

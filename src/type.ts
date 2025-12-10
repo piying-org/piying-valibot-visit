@@ -1,5 +1,6 @@
 import type * as v from 'valibot';
 import {
+  MetadataListAction,
   ConditionAction,
   GroupControlAction,
   RawConfigAction,
@@ -130,7 +131,8 @@ export type MetadataAction =
   | RawConfigAction<'rawConfig', unknown>
   | GroupControlAction<unknown>
   | ConditionAction<unknown>
-  | VirtualGroupAction<unknown>;
+  | VirtualGroupAction<unknown>
+  | MetadataListAction;
 
 export type IntersectSchema = v.IntersectSchema<
   v.IntersectOptions,
