@@ -105,6 +105,7 @@ export type CustomSchema = v.CustomSchema<
   v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
   v.ErrorMessage<v.CustomIssue> | undefined
 >;
+export type MetadataWorkOn = 'collection' | 'init' | 'afterSchemaType';
 export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
   key?: string | number;
 
@@ -163,6 +164,7 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
   end(schema: SchemaOrPipe) {}
 
   defineSchema(schema: SchemaOrPipe) {
+    this.defineName = schema.type;
     this.type = schema.type;
   }
   beforeSchemaType(schema: Schema) {}
@@ -266,12 +268,40 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
   metadataDefaulthandle(
     metadata: MetadataAction,
     environments: string[],
-    workOn: string,
+    workOn: MetadataWorkOn,
   ) {}
+  defineName!: string;
+  #initActionList: (() => any)[] = [];
+
+  #getDefineName(metadata: MetadataAction, environments: string[]) {
+    if (
+      this.globalConfig.environments !== environments &&
+      this.globalConfig.environments.every(
+        (item) => !environments.includes(item),
+      )
+    ) {
+      return;
+    }
+    if ('workOn' in metadata && metadata.workOn) {
+      return;
+    }
+    switch (metadata.type) {
+      case 'defineName' as any: {
+        this.defineName = (metadata as any).value;
+        break;
+      }
+      case 'condition': {
+        metadata.value.actions.forEach((item) => {
+          this.#getDefineName(item as any, metadata.value.environments);
+        });
+        break;
+      }
+    }
+  }
   metadataHandle(
     metadata: MetadataAction,
     environments: string[],
-    workOn: string,
+    workOn: MetadataWorkOn,
   ) {
     if (
       this.globalConfig.environments !== environments &&
@@ -281,7 +311,8 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
     ) {
       return;
     }
-    if (workOn === 'init' && 'workOn' in metadata && metadata.workOn) {
+
+    if (workOn === 'collection' && 'workOn' in metadata && metadata.workOn) {
       this.afterSchemaTypeList.push(metadata as any);
       return;
     }
@@ -326,10 +357,25 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
         break;
     }
   }
-  metadata(metadata: MetadataAction, workOn: string) {
-    this.metadataHandle(metadata, this.globalConfig.environments, workOn);
+  metadata(metadata: MetadataAction, workOn: MetadataWorkOn) {
+    if (workOn === 'collection') {
+      this.#getDefineName(metadata, this.globalConfig.environments);
+      this.#initActionList.push(() =>
+        this.metadataHandle(metadata, this.globalConfig.environments, workOn),
+      );
+    } else {
+      this.metadataHandle(metadata, this.globalConfig.environments, workOn);
+    }
   }
-
+  initMetadata() {
+    const list = this.globalConfig.defaultMetadataActionsGroup?.[this.defineName];
+    if (list) {
+      list.forEach((item) => {
+        this.metadata(item as any, 'init');
+      });
+    }
+    this.#initActionList.forEach((item) => item());
+  }
   validation(item: v.BaseValidation<any, any, v.BaseIssue<unknown>>) {}
   transformation(item: v.BaseTransformation<any, any, v.BaseIssue<unknown>>) {}
 

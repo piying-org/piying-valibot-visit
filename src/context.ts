@@ -1,3 +1,4 @@
+import { BaseMetadata } from 'valibot';
 import { BaseSchemaHandle } from './handle/schema-handle';
 // 全局不变参数,
 export interface ConvertOptions<
@@ -9,5 +10,6 @@ export interface ConvertOptions<
   context?: any;
   handle: Handle;
   // fieldConfig: T;
+  defaultMetadataActionsGroup?: Record<string, BaseMetadata<any>[]>;
 }
 // 上下文,用于查询父级使用,只有array时会创建新的

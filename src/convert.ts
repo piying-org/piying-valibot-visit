@@ -47,13 +47,14 @@ export function convertSchema(
         wrappedList.push(valibotPipeItem);
       }
     } else if (valibotPipeItem.kind === 'metadata') {
-      sh.metadata(valibotPipeItem as any, 'init');
+      sh.metadata(valibotPipeItem as any, 'collection');
     } else if (valibotPipeItem.kind === 'validation') {
       sh.validation(valibotPipeItem);
     } else if (valibotPipeItem.kind === 'transformation') {
       sh.transformation(valibotPipeItem);
     }
   }
+  sh.initMetadata();
   for (const wrapped of wrappedList.reverse()) {
     sh.wrappedSchema(wrapped);
   }

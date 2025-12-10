@@ -3,3 +3,4 @@ export * from './raw-config';
 export * from './condition';
 export * from './v-group';
 export * from './metadata-pipe';
+export * from './define-name';
