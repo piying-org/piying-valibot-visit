@@ -11,5 +11,7 @@ export interface ConvertOptions<
   handle: Handle;
   // fieldConfig: T;
   defaultMetadataActionsGroup?: Record<string, BaseMetadata<any>[]>;
+  /** 继承时保存其他数据时使用 */
+  additionalData?: Record<string, any>;
 }
 // 上下文,用于查询父级使用,只有array时会创建新的
