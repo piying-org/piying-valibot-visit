@@ -328,18 +328,15 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
         break;
       }
       case 'title': {
-        this.props ??= {};
-        this.props['title'] = metadata.title;
+        this.updateProps('title', metadata.title);
         break;
       }
       case 'description': {
-        this.props ??= {};
-        this.props['description'] = metadata.description;
+        this.updateProps('description', metadata.description);
         break;
       }
       case 'metadata': {
-        this.props ??= {};
-        this.props['metadata'] = metadata.metadata;
+        this.updateProps('metadata', metadata.metadata);
         break;
       }
       case 'asControl': {
@@ -495,5 +492,9 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
     this.parent = parent;
     parent!.children ??= [];
     parent!.children.push(this as any);
+  }
+  updateProps(key: string, value: any) {
+    this.props ??= {};
+    this.props[key] = value;
   }
 }
