@@ -5,20 +5,20 @@ export interface DefineNameAction<TInput = unknown>
   /**
    * The action type.
    */
-  readonly type: 'defineName';
+  readonly type: 'defineType';
   /**
    * The action reference.
    */
-  readonly reference: typeof defineName;
+  readonly reference: typeof defineType;
 
   readonly value: string;
 }
 
-export function defineName<TInput>(value: string): DefineNameAction<TInput> {
+export function defineType<TInput>(value: string): DefineNameAction<TInput> {
   return {
     kind: 'metadata',
-    type: 'defineName',
-    reference: defineName,
+    type: 'defineType',
+    reference: defineType,
     value: value,
   };
 }

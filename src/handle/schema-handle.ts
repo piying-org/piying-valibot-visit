@@ -112,7 +112,7 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
   children: T[] = [];
   parent?: T;
   // root?: T;
-  type?: string;
+  type!: string;
   /** 标识为一个group组 */
   isGroup: boolean | undefined;
   /** 标识为一个普通控件 */
@@ -164,7 +164,6 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
   end(schema: SchemaOrPipe) {}
 
   defineSchema(schema: SchemaOrPipe) {
-    this.defineName = schema.type;
     this.type = schema.type;
   }
   beforeSchemaType(schema: Schema) {}
@@ -270,10 +269,9 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
     environments: string[],
     workOn: MetadataWorkOn,
   ) {}
-  defineName!: string;
   #initActionList: (() => any)[] = [];
 
-  #getDefineName(metadata: MetadataAction, environments: string[]) {
+  #getDefineType(metadata: MetadataAction, environments: string[]) {
     if (
       this.globalConfig.environments !== environments &&
       this.globalConfig.environments.every(
@@ -286,19 +284,19 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
       return;
     }
     switch (metadata.type) {
-      case 'defineName' as any: {
-        this.defineName = (metadata as any).value;
+      case 'defineType' as any: {
+        this.type = (metadata as any).value;
         break;
       }
       case 'metadataList': {
         metadata.value.forEach((item) => {
-          this.#getDefineName(item as any, environments);
+          this.#getDefineType(item as any, environments);
         });
         break;
       }
       case 'condition': {
         metadata.value.actions.forEach((item) => {
-          this.#getDefineName(item as any, metadata.value.environments);
+          this.#getDefineType(item as any, metadata.value.environments);
         });
         break;
       }
@@ -368,7 +366,7 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
   }
   metadata(metadata: MetadataAction, workOn: MetadataWorkOn) {
     if (workOn === 'collection') {
-      this.#getDefineName(metadata, this.globalConfig.environments);
+      this.#getDefineType(metadata, this.globalConfig.environments);
       this.#initActionList.push(() =>
         this.metadataHandle(metadata, this.globalConfig.environments, workOn),
       );
@@ -377,8 +375,7 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
     }
   }
   initMetadata() {
-    const list =
-      this.globalConfig.defaultMetadataActionsGroup?.[this.defineName];
+    const list = this.globalConfig.defaultMetadataActionsGroup?.[this.type];
     if (list) {
       list.forEach((item) => {
         this.metadata(item as any, 'init');
