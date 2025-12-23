@@ -122,6 +122,8 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
   props?: Record<string, any>;
   /** 权重,排序时可能用到 */
   priority = 0;
+  childrenAsVirtualGroup = false;
+
   /** wrapper用 */
   undefinedable = false;
   nullable = false;
@@ -350,6 +352,7 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
       }
       case 'asVirtualGroup': {
         this.isGroup = true;
+        this.childrenAsVirtualGroup = metadata.value;
         break;
       }
       case 'condition': {

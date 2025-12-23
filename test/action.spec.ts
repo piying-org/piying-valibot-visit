@@ -1,13 +1,22 @@
 import { expect } from 'chai';
 import { convertCore } from '../src/convert';
-import { BaseSchemaHandle, NonOptionalWrapSchema, OptionalWrapSchema } from '../src/handle/schema-handle';
+import {
+  BaseSchemaHandle,
+  NonOptionalWrapSchema,
+  OptionalWrapSchema,
+} from '../src/handle/schema-handle';
 import * as v from 'valibot';
-import { condition, SchemaOrPipe } from '../src';
+import { asVirtualGroup, condition, SchemaOrPipe } from '../src';
 describe('action', () => {
   class TestHandle extends BaseSchemaHandle<any> {}
 
   it('默认', () => {
-    let a = v.pipe(v.string(), v.title('1234'), v.description('description1234'), v.metadata({ value: 1 }));
+    let a = v.pipe(
+      v.string(),
+      v.title('1234'),
+      v.description('description1234'),
+      v.metadata({ value: 1 }),
+    );
     let result = convertCore(
       a,
       (item) => {
@@ -15,7 +24,7 @@ describe('action', () => {
       },
       {
         handle: TestHandle,
-      }
+      },
     );
     expect(result.props!['title']).eq('1234');
     expect(result.props!['description']).eq('description1234');
@@ -28,7 +37,7 @@ describe('action', () => {
       condition({
         environments: ['a'],
         actions: [v.description('description1234'), v.metadata({ value: 1 })],
-      })
+      }),
     );
     let result = convertCore(
       a,
@@ -38,7 +47,7 @@ describe('action', () => {
       {
         handle: TestHandle,
         environments: ['a'],
-      }
+      },
     );
     expect(result.props!['title']).eq('1234');
     expect(result.props!['description']).eq('description1234');
@@ -51,7 +60,7 @@ describe('action', () => {
       condition({
         environments: ['b'],
         actions: [v.description('description1234'), v.metadata({ value: 1 })],
-      })
+      }),
     );
     let result = convertCore(
       a,
@@ -61,7 +70,7 @@ describe('action', () => {
       {
         handle: TestHandle,
         environments: ['a'],
-      }
+      },
     );
     expect(result.props!['title']).eq('1234');
     expect(result.props!['description']).not.eq('description1234');
@@ -78,7 +87,7 @@ describe('action', () => {
       condition({
         environments: ['a'],
         actions: [v.description('aaaa'), v.metadata({ value: 1 })],
-      })
+      }),
     );
     let result = convertCore(
       a,
@@ -88,7 +97,7 @@ describe('action', () => {
       {
         handle: TestHandle,
         environments: ['b'],
-      }
+      },
     );
     expect(result.props!['title']).eq('1234');
     expect(result.props!['description']).eq('bbbb');
@@ -103,7 +112,7 @@ describe('action', () => {
       condition({
         environments: ['a'],
         actions: [v.description('aaaa'), v.metadata({ value: 1 })],
-      })
+      }),
     );
     let result = convertCore(
       a,
@@ -113,7 +122,7 @@ describe('action', () => {
       {
         handle: TestHandle,
         environments: ['b'],
-      }
+      },
     );
     expect(result.props!['description']).eq('bbbb');
     result = convertCore(
@@ -123,7 +132,7 @@ describe('action', () => {
       },
       {
         handle: TestHandle,
-      }
+      },
     );
     expect(result.props!['description']).eq('bbbb');
     result = convertCore(
@@ -134,8 +143,31 @@ describe('action', () => {
       {
         handle: TestHandle,
         environments: ['a'],
-      }
+      },
     );
     expect(result.props!['description']).eq('aaaa');
+  });
+  it('vGroup', () => {
+    let a = v.pipe(v.intersect([]), asVirtualGroup());
+    let result = convertCore(
+      a,
+      (item) => {
+        return item;
+      },
+      {
+        handle: TestHandle,
+      },
+    );
+    expect(result.childrenAsVirtualGroup).eq(true);
+    let result2 = convertCore(
+      v.pipe(v.intersect([])),
+      (item) => {
+        return item;
+      },
+      {
+        handle: TestHandle,
+      },
+    );
+    expect(result2.childrenAsVirtualGroup).eq(false);
   });
 });
