@@ -7,6 +7,7 @@ import {
 } from '../src/handle/schema-handle';
 import * as v from 'valibot';
 import {
+  asVirtualGroup,
   condition,
   defineType,
   metadataList,
@@ -75,6 +76,22 @@ describe('action', () => {
         handle: TestHandle,
         defaultMetadataActionsGroup: {
           use1: [v.title('preset')],
+        },
+      },
+    );
+    expect(result.props!['title']).eq('preset');
+  });
+  it('vGroup', () => {
+    let a = v.pipe(v.intersect([]), asVirtualGroup());
+    let result = convertCore(
+      a,
+      (item) => {
+        return item;
+      },
+      {
+        handle: TestHandle,
+        defaultMetadataActionsGroup: {
+          'intersect-group': [v.title('preset')],
         },
       },
     );

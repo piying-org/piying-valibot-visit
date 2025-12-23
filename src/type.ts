@@ -5,6 +5,7 @@ import {
   GroupControlAction,
   RawConfigAction,
   VirtualGroupAction,
+  DefineTypeAction,
 } from './action';
 import { BaseSchemaHandle } from './handle/schema-handle';
 
@@ -132,7 +133,8 @@ export type MetadataAction =
   | GroupControlAction<unknown>
   | ConditionAction<unknown>
   | VirtualGroupAction<unknown>
-  | MetadataListAction;
+  | MetadataListAction
+  | DefineTypeAction;
 
 export type IntersectSchema = v.IntersectSchema<
   v.IntersectOptions,

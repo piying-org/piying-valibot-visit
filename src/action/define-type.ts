@@ -1,6 +1,6 @@
 import type { BaseMetadata } from 'valibot';
 
-export interface DefineNameAction<TInput = unknown>
+export interface DefineTypeAction<TInput = unknown>
   extends BaseMetadata<TInput> {
   /**
    * The action type.
@@ -14,7 +14,7 @@ export interface DefineNameAction<TInput = unknown>
   readonly value: string;
 }
 
-export function defineType<TInput>(value: string): DefineNameAction<TInput> {
+export function defineType<TInput>(value: string): DefineTypeAction<TInput> {
   return {
     kind: 'metadata',
     type: 'defineType',

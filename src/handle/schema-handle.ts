@@ -122,7 +122,6 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
   props?: Record<string, any>;
   /** 权重,排序时可能用到 */
   priority = 0;
-  childrenAsVirtualGroup = false;
   /** wrapper用 */
   undefinedable = false;
   nullable = false;
@@ -284,8 +283,12 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
       return;
     }
     switch (metadata.type) {
-      case 'defineType' as any: {
-        this.type = (metadata as any).value;
+      case 'defineType': {
+        this.type = metadata.value;
+        break;
+      }
+      case 'asVirtualGroup': {
+        this.type = 'intersect-group';
         break;
       }
       case 'metadataList': {
@@ -321,6 +324,9 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
       return;
     }
     switch (metadata.type) {
+      case 'defineType': {
+        break;
+      }
       case 'rawConfig': {
         metadata.value(this as any, this.globalConfig.context);
         break;
@@ -344,7 +350,6 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
       }
       case 'asVirtualGroup': {
         this.isGroup = true;
-        this.childrenAsVirtualGroup = metadata.value;
         break;
       }
       case 'condition': {
@@ -454,11 +459,7 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
     });
   }
 
-  intersectBefore(schema: IntersectSchema) {
-    if (this.childrenAsVirtualGroup) {
-      this.type = 'intersect-group';
-    }
-  }
+  intersectBefore(schema: IntersectSchema) {}
   logicItemSchema(
     schema: v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
     index: number,
