@@ -2,8 +2,9 @@ import { ConvertOptions } from './context';
 import { BaseSchemaHandle } from './handle/schema-handle';
 import { SchemaOrPipe, Schema, ConvertContext } from './type';
 import { flatSchema } from './util/flat-schema';
+import * as v from 'valibot';
 export function convertCore<Handle extends typeof BaseSchemaHandle<any>, T>(
-  obj: SchemaOrPipe,
+  obj: v.BaseSchema<any, any, any>,
   fn: (item: InstanceType<Handle>) => T,
   options: ConvertOptions<Handle>,
 ) {
@@ -20,7 +21,7 @@ export function convertCore<Handle extends typeof BaseSchemaHandle<any>, T>(
     undefined,
     context,
   );
-  convertSchema(obj, sh);
+  convertSchema(obj as SchemaOrPipe, sh);
   return fn(sh as InstanceType<Handle>);
 }
 
