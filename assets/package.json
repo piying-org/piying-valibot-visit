@@ -13,6 +13,10 @@
     "type": "git",
     "url": "git+https://github.com/piying-org/piying-valibot-visit.git"
   },
+  "bugs": {
+    "url": "https://github.com/piying-org/piying-valibot-visit/issues"
+  },
+  "homepage": "https://github.com/piying-org/piying-valibot-visit#readme",
   "description": "valibot遍历器",
   "dependencies": {
     "valibot": "^1.1.0"
