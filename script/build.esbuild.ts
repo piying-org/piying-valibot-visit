@@ -14,7 +14,11 @@ async function main() {
     sourcemap: true,
     plugins: [
       copy({
-        assets: [{ from: `./assets/*`, to: './' }],
+        assets: [
+          { from: `./assets/*`, to: './' },
+          { from: `./README.md`, to: './README.md' },
+          { from: `./README.zh-CN.md`, to: './README.zh-CN.md' },
+        ],
       }),
       clean({ patterns: ['./dist/*'] }),
     ],
