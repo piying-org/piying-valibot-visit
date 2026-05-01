@@ -417,7 +417,7 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
     const sh = new this.globalConfig.handle(
       this.globalConfig,
       this as unknown as T,
-      schema,
+      schema.item,
     );
     sh.parent = this as any as T;
     this.arrayChild = sh as T;
