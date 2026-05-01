@@ -16,11 +16,13 @@ jobs:
         run: |
           git config --global user.name "${GITHUB_ACTOR}"
           git config --global user.email "${GITHUB_ACTOR}@gmail.com"
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: install-node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22.x
+          registry-url: 'https://registry.npmjs.org'
+
       - run: npm ci
       - run: npm run build
       - run: npm run test
