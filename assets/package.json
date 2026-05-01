@@ -10,7 +10,8 @@
   ],
   "license": "MIT",
   "repository": {
-    "url": "https://github.com/piying-org/piying-valibot-visit"
+    "type": "git",
+    "url": "git+https://github.com/piying-org/piying-valibot-visit.git"
   },
   "description": "valibot遍历器",
   "dependencies": {
