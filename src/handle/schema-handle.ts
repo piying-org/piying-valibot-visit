@@ -351,7 +351,7 @@ export class BaseSchemaHandle<T extends BaseSchemaHandle<T>> {
         break;
       }
       case 'asVirtualGroup': {
-        this.isGroup = true;
+        this.isGroup =  metadata.value;
         this.childrenAsVirtualGroup = metadata.value;
         break;
       }
