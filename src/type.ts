@@ -152,5 +152,5 @@ export type UnionSchema =
     >;
 
 export interface ConvertContext {
-  lazyMap: WeakMap<v.BaseSchema<any, any, any>, BaseSchemaHandle<any>>;
+  lazyMap: Map<v.BaseSchema<any, any, any>, BaseSchemaHandle<any>>;
 }

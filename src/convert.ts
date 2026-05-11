@@ -13,7 +13,7 @@ export function convertCore<Handle extends typeof BaseSchemaHandle<any>, T>(
     environments: options?.environments ?? ['default'],
   };
   const context: ConvertContext = {
-    lazyMap: new WeakMap(),
+    lazyMap: new Map(),
   };
   const sh = new resolvedOptions.handle(
     resolvedOptions,
@@ -22,7 +22,9 @@ export function convertCore<Handle extends typeof BaseSchemaHandle<any>, T>(
     context,
   );
   convertSchema(obj as SchemaOrPipe, sh);
-  return fn(sh as InstanceType<Handle>);
+  let result = fn(sh as InstanceType<Handle>);
+  context.lazyMap.clear();
+  return result;
 }
 
 // 目前,希望先处理管道,然后再处理当前,子级
