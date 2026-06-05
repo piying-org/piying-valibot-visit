@@ -5,13 +5,17 @@
   "compilerOptions": {
     "target": "ES2022",
     "useDefineForClassFields": true,
-    "module": "ES2022", 
+    "module": "ES2022",
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitOverride": true,
-    "skipLibCheck": true 
+    "skipLibCheck": true,
+    "types": [
+      "mocha",
+      "node"
+    ]
   }
 }

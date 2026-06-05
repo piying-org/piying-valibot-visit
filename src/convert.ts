@@ -3,7 +3,10 @@ import { BaseSchemaHandle } from './handle/schema-handle';
 import { SchemaOrPipe, Schema, ConvertContext } from './type';
 import { flatSchema } from './util/flat-schema';
 import * as v from 'valibot';
-export function convertCore<Handle extends typeof BaseSchemaHandle<any>, T>(
+export function convertCore<
+  Handle extends new (...args: any) => BaseSchemaHandle<any>,
+  T,
+>(
   obj: v.BaseSchema<any, any, any>,
   fn: (item: InstanceType<Handle>) => T,
   options: ConvertOptions<Handle>,

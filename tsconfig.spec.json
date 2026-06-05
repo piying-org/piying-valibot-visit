@@ -3,6 +3,7 @@
   "include": [
     "./test/**/*.spec.ts"
   ],
+  "files": [],
   "compilerOptions": {
     "paths": {
       "@piying/valibot-visit": [
