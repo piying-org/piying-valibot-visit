@@ -12,7 +12,7 @@ async function main() {
       }),
     ],
     outdir: path.join(process.cwd(), './test-dist'),
-    tsconfig: 'tsconfig.spec.json',
+    tsconfig: './test/tsconfig.json',
     packages: 'bundle',
     inject: [path.join(process.cwd(), './script/cjs-shim.ts')],
     outExtension: {
